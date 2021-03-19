@@ -1,13 +1,12 @@
 import { FormEvent, useState } from 'react';
+import { Container, TransactionTypeContent, RadioBox } from './styles'
 
 import Modal from 'react-modal';
-
-import { Container, TransactionTypeContent, RadioBox } from './styles'
 
 import closeImg from '../../assets/close.svg';
 import incomeImg from '../../assets/income.svg';
 import outcomeImg from '../../assets/outcome.svg';
-import { api } from '../../services/api';
+import { useTransactions } from '../Summury';
 
 interface NewTransactionModalProps {
   isOpen: boolean;
@@ -17,23 +16,30 @@ interface NewTransactionModalProps {
 Modal.setAppElement('#root');
 
 export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionModalProps) {
+  const { createTransaction } = useTransactions();
+
   const [title, setTitle] = useState('');
-  const [value, setValue] = useState(0);
-  const [cateogry, setCateogry] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [category, setCateogry] = useState('');
 
   const [type, setType] = useState('deposit');
 
-  function handleCreateNewTransaction(event: FormEvent) {
+  async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
 
-    const data = {
+    await createTransaction({
       title,
-      value,
-      cateogry,
-      type,
-    }
+      amount,
+      category,
+      type
+    })
 
-    api.post('/transactions', data)
+    setTitle('');
+    setAmount(0);
+    setCateogry('');
+    setType('deposit');
+
+    onRequestClose();
   }
 
   return (
@@ -64,8 +70,8 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
         <input
           type="number"
           placeholder="Valor"
-          value={value}
-          onChange={event => setValue(Number(event.target.value))}
+          value={amount}
+          onChange={event => setAmount(Number(event.target.value))}
         />
 
         <TransactionTypeContent>
@@ -92,7 +98,7 @@ export function NewTransactionModal({ isOpen, onRequestClose }: NewTransactionMo
         <input
           type="text"
           placeholder="Categoria"
-          value={cateogry}
+          value={category}
           onChange={event => setCateogry(event.target.value)}
         />
 
