@@ -15,16 +15,8 @@ createServer({
         title: 'Freelancer Website',
         type: 'deposit',
         category: 'Dev',
-        amount: 6000,
+        amount: 1000,
         createAt: new Date('2021-02-12 09:00:00'),
-      },
-      {
-        id: 2,
-        title: 'Compra de bicicleta',
-        type: 'withdraw',
-        category: 'Compra',
-        amount: 1600,
-        createAt: new Date('2021-02-14 11:00:00'),
       }
       ]
     })

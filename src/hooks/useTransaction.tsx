@@ -1,4 +1,5 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 import { api } from '../services/api';
 
 interface Transactions {
@@ -42,6 +43,12 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
       ...transactions,
       transaction
     ])
+
+    if (transaction.type === 'deposit') {
+      toast.success('Você fez um deposíto! 😎')
+    } else if (transaction.type === 'withdraw') {
+      toast.success('Você fez uma retirada! 😵')
+    }
   }
 
   return (
@@ -50,6 +57,9 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
       createTransaction
     }}>
       {children}
+      <Toaster
+        position="top-right"
+      />
     </TransactionsContext.Provider>
   )
 }
